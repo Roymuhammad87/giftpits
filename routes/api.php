@@ -30,7 +30,7 @@ Route::delete('/delete-user-account/{id}', [UserController::class, 'destroy'])->
 Route::post('/users/verify-your-email/{email}', [LoginLogoutController::class, 'verifyEmailAddress'])->middleware('auth:sanctum');
 Route::post('/users/forget-password', [PasswordController::class, 'forgetPassword']);
 
-//categories
+//levels
 Route::prefix('levels')->group(function () {
     Route::get('/get-all-levels', [LevelController::class, 'index']);
     Route::post('/insert-new-level', [LevelController::class, 'store']);
@@ -38,7 +38,7 @@ Route::prefix('levels')->group(function () {
 
 //questions
 Route::prefix('questions')->controller(QuestionController::class)->group(function () {
-    Route::get('/get-questions/{name}', 'index');
+    Route::get('/get-questions', 'index');
     Route::get('/get-all-questions', 'getAllQuestions');
     Route::post('/insert-new-question', 'store');
 });

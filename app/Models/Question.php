@@ -16,7 +16,7 @@ class Question extends Model{
         'optionTwo',
         'optionThree',
         'rightAnswer',
-        'category_id'
+        'level_id'
     ];
 
     protected $hidden = [

@@ -11,15 +11,20 @@ use App\Http\Requests\QuestionRequest;
 class QuestionController extends Controller {
 
     //get  questions by level name
-   public function index(string $name){
-    $level = Level::where('name',$name)->first();
+   public function index(Request $request){
+      $request->validate([
+         'name' => 'required|string',
+      ]);
+    $level = Level::where('name','=', $request->input('name'))->first();
+    if ($level) {
     $id = $level->id;
-    $questions = Question::where('level_id',$id)->get();
+    $questions = Question::where('level_id','=',$id)->get();
     if(count($questions) > 0 ) {
        return ApiResponse::apiResponse(200, "Questions retrieved successfully", $questions);
-    } else {
-       return ApiResponse::apiResponse(404, "No questions found for this category");
-    }
+     } else {
+       return ApiResponse::apiResponse(404, "No questions found for this level");
+     }
+   }
  }
 
  //function for getting all questions
@@ -37,15 +42,15 @@ class QuestionController extends Controller {
 
    $validatedData  = $request->validated();
    //store data in database
+   $id = Level::where('name', $validatedData['level'])->first()->id;
    $question = Question::create([
       'question'=>$validatedData['question'],
       'optionOne'=>$validatedData['optionOne'],
       'optionTwo'=>$validatedData['optionTwo'],
       'optionThree'=>$validatedData['optionThree'],
       'rightAnswer'=>$validatedData['rightAnswer'],
-      'level_id'=>Level::where('name', $validatedData['level'])->first()->id,
+      'level_id'=>$id,
    ]);
-
    if($question) {
       return ApiResponse::apiResponse(201,  "Question created successfully", $question);
    } else {

@@ -18,10 +18,7 @@ return new class extends Migration
             $table->string('optionTwo');
             $table->string('optionThree');
             $table->string('rightAnswer');
-            $table->foreignId('level_id')->nullable()
-                  ->constrained()
-                  ->onUpdate('cascade')
-                  ->onDelete('cascade');
+            $table->foreignId('level_id')->constrained() ->onDelete('cascade');
             $table->timestamps();
         });
     }
