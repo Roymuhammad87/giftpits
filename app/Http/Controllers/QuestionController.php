@@ -2,64 +2,54 @@
 
 namespace App\Http\Controllers;
 
+use ApiResponse;
+use App\Models\Level;
 use App\Models\Question;
 use Illuminate\Http\Request;
+use App\Http\Requests\QuestionRequest;
 
-class QuestionController extends Controller
-{
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
+class QuestionController extends Controller {
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+    //get  questions by level name
+   public function index(string $name){
+    $level = Level::where('name',$name)->first();
+    $id = $level->id;
+    $questions = Question::where('level_id',$id)->get();
+    if(count($questions) > 0 ) {
+       return ApiResponse::apiResponse(200, "Questions retrieved successfully", $questions);
+    } else {
+       return ApiResponse::apiResponse(404, "No questions found for this category");
     }
+ }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+ //function for getting all questions
+ public function getAllQuestions(){
+    $questions = Question::all();
+    if(count($questions) > 0 ) {
+       return ApiResponse::apiResponse(200, "All questions retrieved successfully", $questions);
+       } else {
+          return ApiResponse::apiResponse(404, "No questions found");
+          }
+    }     
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Question $question)
-    {
-        //
-    }
+ //store new question
+ public function store(QuestionRequest $request) {
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Question $question)
-    {
-        //
-    }
+   $validatedData  = $request->validated();
+   //store data in database
+   $question = Question::create([
+      'question'=>$validatedData['question'],
+      'optionOne'=>$validatedData['optionOne'],
+      'optionTwo'=>$validatedData['optionTwo'],
+      'optionThree'=>$validatedData['optionThree'],
+      'rightAnswer'=>$validatedData['rightAnswer'],
+      'level_id'=>Level::where('name', $validatedData['level'])->first()->id,
+   ]);
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Question $question)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Question $question)
-    {
-        //
-    }
+   if($question) {
+      return ApiResponse::apiResponse(201,  "Question created successfully", $question);
+   } else {
+      return ApiResponse::apiResponse(401, "Failed to create question");
+   }
+ }
 }

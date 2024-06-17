@@ -2,64 +2,67 @@
 
 namespace App\Http\Controllers;
 
+use ApiResponse;
+use App\Models\Score;
 use App\Models\UserProgress;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
-class UserProgressController extends Controller
-{
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+class UserProgressController extends Controller{
+
+    public function saveProgress(Request $request)
     {
-        //
+        $request->validate([
+            'level_id' => 'required|integer',
+            'current_question_index' => 'required|integer',
+            'score' => 'required|integer',
+            'is_level_completed' => 'required|boolean',
+        ]);
+
+        $progress = UserProgress::updateOrCreate(
+            [
+                'user_id' => Auth::id(),
+                'level_id' => $request->level_id,
+            ],
+            [
+                'current_question_index' => $request->current_question_index,
+                'completed' => $request->is_level_completed,
+            ]
+        );
+
+        if (!$progress->completed) {
+            $totalScore = Score::firstOrCreate(
+                ['user_id' => Auth::id()],
+                ['score' => 0]
+            );
+
+            $totalScore->score += $request->score;
+            $totalScore->save();
+        } elseif ($progress->wasRecentlyCreated) {
+            // If progress was marked completed for the first time, reward score
+            $totalScore = Score::firstOrCreate(
+                ['user_id' => Auth::id()],
+                ['score' => 0]
+            );
+
+            $totalScore->score += $request->score;
+            $totalScore->save();
+        }
+
+        return ApiResponse::apiResponse(200, 'successfully rewarded', $progress);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+    public function getProgress(Request $request){
+        $request->validate([
+            'level_id' => 'required|integer',
+        ]);
+
+        $progress = UserProgress::where('user_id', Auth::id())
+                                ->where('level_id', $request->level_id)
+                                ->first();
+
+                                return ApiResponse::apiResponse(200, 'successfully rewarded', $progress);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(UserProgress $userProgress)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(UserProgress $userProgress)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, UserProgress $userProgress)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(UserProgress $userProgress)
-    {
-        //
-    }
+    
 }

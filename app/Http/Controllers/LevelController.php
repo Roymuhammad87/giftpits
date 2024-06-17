@@ -2,64 +2,47 @@
 
 namespace App\Http\Controllers;
 
+use ApiResponse;
 use App\Models\Level;
 use Illuminate\Http\Request;
+use App\Http\Requests\LevelRequest;
 
-class LevelController extends Controller
-{
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
+class LevelController extends Controller{
+
+   //get all levels
+
+   public function index() {
+    $data = Level::all();
+
+    if(count($data) > 0) {
+        return ApiResponse::apiResponse(200, "Levels retrieved successfully", $data);
+    } else {
+        return ApiResponse::apiResponse(404, "No Levels found");
+    }
+}
+
+ //insert new level
+public function store(LevelRequest $request) {
+
+    $validatedData = $request->validated();
+
+    $file = $request->image;
+    if($file){
+        $name = uniqid().'-'.$file->extension();
+        $path = 'uploads/levels/';
+        $file->move($path, $name);
+        $image  =  $path.$name;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
+    $level = Level::create([
+        'name' => $validatedData['name'],
+        'image'=>$image
+    ]);
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
+    if($level) {
+        return ApiResponse::apiResponse(201, "Level created successfully", $level);
+    } else {
+        return ApiResponse::apiResponse(400, "Failed to create level");
     }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Level $level)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Level $level)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Level $level)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Level $level)
-    {
-        //
-    }
+  }   
 }
