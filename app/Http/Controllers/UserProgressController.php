@@ -57,7 +57,7 @@ class UserProgressController extends Controller{
             $progress->save();
         }
 
-        return response()->json($progress, 200);
+        return ApiResponse::apiResponse(200, "successfully saved progress", $progress);
     }
 
     public function getProgress(Request $request)
@@ -75,10 +75,13 @@ class UserProgressController extends Controller{
                                                  $query->where('level_id', $request->level_id);
                                              })->pluck('question_id');
 
-        return response()->json([
-            'progress' => $progress,
-            'answered_questions' => $answeredQuestions,
-        ], 200);
+       $data = [
+        'progress' => $progress,
+        'answered_questions' => $answeredQuestions,
+       ];
+        return ApiResponse::apiResponse(200,
+         "successfully saved progress",
+         $data);
     }
         
 }

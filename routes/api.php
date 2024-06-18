@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\Api\PasswordController;
 use App\Http\Controllers\Api\RegisterController;
+use App\Http\Controllers\UserProgressController;
 use App\Http\Controllers\Api\LoginLogoutController;
 
 Route::get('/user', function (Request $request) {
@@ -49,4 +50,10 @@ Route::prefix('scores')->controller(ScoreController::class)->group(function(){
     Route::get('/get-user-score/{id}', 'index');
     Route::post('/insert-score', 'store');
     Route::get('/get-all-scores', 'allScores');
+});
+
+//UserProgress
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/progress/save', [UserProgressController::class, 'saveProgress']);
+    Route::get('/progress', [UserProgressController::class, 'getProgress']);
 });
