@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\PasswordController;
 use App\Http\Controllers\Api\RegisterController;
 use App\Http\Controllers\UserProgressController;
 use App\Http\Controllers\Api\LoginLogoutController;
+use Laravel\Jetstream\Http\Controllers\Inertia\UserProfileController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -57,3 +58,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/progress/save', [UserProgressController::class, 'saveProgress']);
     Route::get('/progress', [UserProgressController::class, 'getProgress']);
 });
+
+//answered questions
+Route::prefix('answered-questions')->controller(UserProgressController::class)->group(function ()
+{
+    Route::post('/insert-answered-question', 'store');
+    Route::get('/get-answered-questions', 'getAnsweredQuestions');
+    });
+
+    Route::get('/is-level-completed', [UserProgressController::class, 'isLevelCompleted']);

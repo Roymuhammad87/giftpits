@@ -8,6 +8,8 @@ use App\Models\Score;
 use App\Models\UserProgress;
 use Illuminate\Http\Request;
 use App\Models\AnsweredQuestion;
+use App\Models\Question;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 class UserProgressController extends Controller{
@@ -82,6 +84,95 @@ class UserProgressController extends Controller{
         return ApiResponse::apiResponse(200,
          "successfully saved progress",
          $data);
+    }
+
+    //Store answered questtions
+    
+    public function store(Request $request) {
+        $request ->validate([
+            'user_id'=>'required|integer|exists:users,id',
+            'question_id' => 'required|integer|exists:questions,id',
+            'score'=>'required|integer',
+            'correct_answers_ids'=>'required|array'
+        ]);
+        $answeredQuestion = AnsweredQuestion::create([
+             'user_id'=> $request->input('user_id'),
+             'question_id'=>$request->input('question_id'),
+        ]);
+        $score = Score::where('user_id', $request->input('user_id'))->first();
+        $score->update([
+            'score'=>$score->score + $request->input('score'),
+        ]);
+       $question = Question::where('id', $request->input('question_id'))->first();
+       $level = $question->level;
+       $levelQuestionsCount = Question::where('level_id', $level->id)->get();
+
+       $progress = UserProgress::updateOrCreate(
+        [
+            'user_id' => $request->input('user_id'),
+            'level_id' => $level->id,
+        ],
+        [
+            'current_question_index' => $request->input('question_id'),
+            'is_level_completed' => false
+        ]
+    );
+       if(count($levelQuestionsCount) == count($request->input('correct_answers_ids'))){
+
+        $progress->update([
+            'is_level_completed'=>true,
+            ]);
+         }
+
+        if($answeredQuestion) {
+            return ApiResponse::apiResponse(201, 'inserted successfully',
+            $answeredQuestion);
+        } else {
+            return ApiResponse::apiResponse(400, 'insertion failed');
+        }
+    
+    }
+
+    public function getAnsweredQuestions(Request $request) {
+        $request ->validate([
+            'user_id'=>'required|integer|exists:users,id',
+        ]);
+
+        $answeredQuestions = AnsweredQuestion::where('user_id', $request->input('user_id'))->get();
+        $ids = array();
+        foreach($answeredQuestions as $answeredQuestion) {
+            array_push($ids, $answeredQuestion->question_id);
+            }
+        if(count($answeredQuestions) > 0) {
+            return ApiResponse::apiResponse(200, 'successfully retrieved',
+            $ids);
+        } else {
+            return ApiResponse::apiResponse(404, 'no data found');
+        }
+    }
+
+    public function isLevelCompleted(Request $request) {
+        $request ->validate([
+            'user_id'=>'required|integer|exists:users,id',
+            'level_name'=>'required|string|exists:levels,name',
+            ]);
+            $levelId = Level::where('name', $request->input('level_name'))->first()->id;
+            $progress = UserProgress::where('user_id', $request->input('user_id'))->where
+            ('level_id', $levelId)->first();
+            if($progress) {
+                if($progress->is_level_completed) {
+                return ApiResponse::apiResponse(200, 'level is completed', 
+                true);
+                } else {
+                    return ApiResponse::apiResponse(200, 'level is not completed',
+                    false);
+                    }
+            } else {
+                return ApiResponse::apiResponse(200, 'user did not enter this level yet',
+            false);
+            }
+            
+
     }
         
 }

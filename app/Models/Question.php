@@ -25,7 +25,7 @@ class Question extends Model{
     ];
 
 
-    public function category(){
+    public function level(){
         return $this->belongsTo(Level::class);
     }
 }
