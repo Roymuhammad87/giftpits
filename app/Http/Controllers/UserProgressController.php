@@ -139,9 +139,12 @@ class UserProgressController extends Controller{
         ]);
 
         $answeredQuestions = AnsweredQuestion::where('user_id', $request->input('user_id'))->get();
-        $ids = array();
+        $ids = [];
         foreach($answeredQuestions as $answeredQuestion) {
-            array_push($ids, $answeredQuestion->question_id);
+            $ids[] = [
+                'user_id'=>$answeredQuestion->user_id,
+                'question_id'=>$answeredQuestion->question_id,
+            ];
             }
         if(count($answeredQuestions) > 0) {
             return ApiResponse::apiResponse(200, 'successfully retrieved',
@@ -162,14 +165,14 @@ class UserProgressController extends Controller{
             if($progress) {
                 if($progress->is_level_completed) {
                 return ApiResponse::apiResponse(200, 'level is completed', 
-                true);
+                ['is_level_completed'=>true]);
                 } else {
                     return ApiResponse::apiResponse(200, 'level is not completed',
-                    false);
+                    ['is_level_completed'=>false]);
                     }
             } else {
                 return ApiResponse::apiResponse(200, 'user did not enter this level yet',
-            false);
+            ['is_level_completed'=>false]);
             }
             
 
