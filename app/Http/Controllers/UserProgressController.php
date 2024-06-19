@@ -115,9 +115,21 @@ class UserProgressController extends Controller{
         [
             'current_question_index' => $request->input('question_id'),
             'is_level_completed' => false
-        ]
-    );
-       if(count($levelQuestionsCount) == count($request->input('correct_answers_ids'))){
+        ]);
+
+         // Check if all questions in the level are answered correctly
+        $answeredQuestions = AnsweredQuestion::where('user_id', $request->input('user_id'))
+        ->get();
+        $answeredQuestionsInLevel = [];
+        foreach($answeredQuestions as $answeredQuestion) {
+            $question = Question::where('id', $answeredQuestion->question_id)->first();
+            if($question->level_id == $level->id) {
+                $answeredQuestionsInLevel[] = $answeredQuestion->question_id;
+                }
+            
+        }
+                                                     
+       if(count($levelQuestionsCount) == count($answeredQuestionsInLevel)){
 
         $progress->update([
             'is_level_completed'=>true,
