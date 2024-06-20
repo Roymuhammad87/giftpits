@@ -177,17 +177,31 @@ class UserProgressController extends Controller{
             if($progress) {
                 if($progress->is_level_completed) {
                 return ApiResponse::apiResponse(200, 'level is completed', 
-                ['is_level_completed'=>true]);
+                ['is_level_completed'=>true, 'id'=>$levelId]);
                 } else {
                     return ApiResponse::apiResponse(200, 'level is not completed',
-                    ['is_level_completed'=>false]);
+                    ['is_level_completed'=>false, 'id'=>$levelId]);
                     }
             } else {
                 return ApiResponse::apiResponse(200, 'user did not enter this level yet',
-            ['is_level_completed'=>false]);
+            ['is_level_completed'=>false, 'id'=>$levelId]);
             }
             
 
+    }
+
+    public function getUserComletedLevels(Request $request) {
+        $request->validate([
+            'user_id' => 'required|integer|exists:users,id',
+        ]);
+    
+        $completedLevels = UserProgress::where('user_id', $request->input('user_id'))->where('is_level_completed', true)->get();
+    
+        if (count($completedLevels) > 0) {
+            return ApiResponse::apiResponse(200, "levels returned successfully", $completedLevels);
+        } else {
+            return ApiResponse::apiResponse(400, 'no completed levels found');
+        }
     }
         
 }

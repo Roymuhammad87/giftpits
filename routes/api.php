@@ -67,3 +67,4 @@ Route::prefix('answered-questions')->controller(UserProgressController::class)->
     });
 
     Route::get('/is-level-completed', [UserProgressController::class, 'isLevelCompleted']);
+    Route::get('/get-completed-levels', [UserProgressController::class, 'getUserComletedLevels']);
