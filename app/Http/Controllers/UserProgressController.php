@@ -196,9 +196,20 @@ class UserProgressController extends Controller{
         ]);
     
         $completedLevels = UserProgress::where('user_id', $request->input('user_id'))->where('is_level_completed', true)->get();
+        $data = [];
+        foreach($completedLevels as $completedLevel){
+            $data[] = [
+                'id' =>$completedLevel->id,
+                'user_id'=>$completedLevel->user_id,
+                'level_id'=>$completedLevel->level_id,
+                'current_question_index'=>$completedLevel->current_question_index,
+                'is_level_completed'=>true
+            ];
+                 
+        }
     
-        if (count($completedLevels) > 0) {
-            return ApiResponse::apiResponse(200, "levels returned successfully", $completedLevels);
+        if (count($data) > 0) {
+            return ApiResponse::apiResponse(200, "levels returned successfully", $data);
         } else {
             return ApiResponse::apiResponse(400, 'no completed levels found');
         }
