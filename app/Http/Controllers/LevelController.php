@@ -88,7 +88,6 @@ class LevelController extends Controller{
      $request->validate([
         'user_id' => 'required|integer|exists:users,id',
         'level_id' => 'required|integer|exists:levels,id',
-        'current_question_index' => 'required|integer',
         'is_level_completed' => 'required|boolean'
        
         ]);
@@ -96,14 +95,12 @@ class LevelController extends Controller{
         $userProgress = UserProgress::create([
             'user_id' => $request->input('user_id'),
             'level_id' => $request->input('level_id'),
-            'currrent_question_index' =>$request->input('currrent_question_index'),
             'is_level_completed' =>$request->input('is_level_completed'),
 
         ]);
       
 
         if($userProgress) {
-            ;
             return ApiResponse::apiResponse(201, "Level marked as completed successfully", $userProgress);
         
         } else {
