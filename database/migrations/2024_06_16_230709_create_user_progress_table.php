@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('level_id')->constrained()->onDelete('cascade');
-            $table->integer('current_question_index')->default(0);
             $table->boolean('is_level_completed')->default(false);
             $table->timestamps();
         });
