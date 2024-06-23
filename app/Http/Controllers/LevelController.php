@@ -65,7 +65,6 @@ class LevelController extends Controller{
             'id' => $completedLevel->id,
             'user_id'=>$completedLevel->user_id,
             'level_id'=>$completedLevel->level_id,
-            'current_question_index'=>$completedLevel->current_question_index,
             'is_level_completed'=>($completedLevel->is_level_completed) == 1? true : false,
 
         ];
