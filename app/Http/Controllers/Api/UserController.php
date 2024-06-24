@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
 use App\Http\Requests\UpdateUserRequest;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller{
 
@@ -60,28 +61,22 @@ class UserController extends Controller{
     public function update(UpdateUserRequest $request){
     
         $validateData = $request->validated();
-        $user = User::where('id', '=', $validateData['id'])->first();
-        
-        //check if the id of authenticated user is the same in validated data
-        if($user->id == $validateData['id']){
-           $user->username = $validateData['username']?:$user->username;
-           $user->email = $validateData['email']?:$user->email;
-            if($request->has('image')){
-                $file = $request->file('image');
-                $fileName = uniqid() . '-' . Str::slug($user->username, '-') . '.' . $file->extension();
-                $filePath = 'uploads/users/';
-                $file->move($filePath, $fileName);
-                $image  =  $filePath . $fileName;
-            }
-            $user->image = $image?:"";
-            dd($user);
-             if($user->save()){
-                return ApiResponse::apiResponse(200, "Updated successfully", $user);
-              } else {
-              return ApiResponse::apiResponse(400, "Failed to update", null);
-              }
+        $user = User::findOrFail($validateData['id']);
+        if($user->id == Auth::id()){
+            $user->username = $validateData['username']?:$user->username;
+            $user->email = $validateData['email']?:$user->email;
+            $user->save();
+            $data = [
+                'id' => $user->id,
+                'username' =>$user->username,
+                'email' =>$user->email,
+
+            ];
+            return ApiResponse::apiResponse(200,
+             'User info updated successsfully',
+             $data);
         } else {
-            return ApiResponse::apiResponse(401, "unauthenticated", []);
+            return ApiResponse::apiResponse(403, "You are not authorized to update this user");
         }
     }
 

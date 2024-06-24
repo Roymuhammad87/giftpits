@@ -23,10 +23,11 @@ Route::get('/user', function (Request $request) {
 Route::prefix('users')->group(function () {
     Route::post('/register-new-user', RegisterController::class); //register new user
     Route::post('/login', [LoginLogoutController::class, 'login']); //login
-    Route::put('/update-user', [UserController::class, 'update']);
+    
 });
 Route::delete('/logout', [LoginLogoutController::class, 'logout'])->middleware('auth:sanctum'); //logout
 Route::delete('/delete-user-account/{id}', [UserController::class, 'destroy'])->middleware('auth:sanctum'); //delete account
+Route::put('/update-user', [UserController::class, 'update'])->middleware('auth:sanctum'); //update
 
 
 //verification and password resets
