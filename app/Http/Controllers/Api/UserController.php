@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Api;
 
 use ApiResponse;
 use App\Models\User;
+use App\Models\UserProfile;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\File;
 use App\Http\Requests\UpdateUserRequest;
 
 class UserController extends Controller{
@@ -89,6 +91,10 @@ class UserController extends Controller{
     public function destroy(Request $request ,int $id){
 
         $user = User::findOrFail($id);
+        $userProfile = UserProfile::where('user_id', $id)->first();
+        if ($userProfile->image && File::exists('uploads/users/' . $userProfile->image)) {
+            File::delete('uploads/users/' . $userProfile->image);
+            }
         if($user){
             $request->user()->currentAccessToken()->delete();
             $user->delete();
