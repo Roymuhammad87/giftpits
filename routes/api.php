@@ -10,6 +10,8 @@ use App\Http\Controllers\Api\PasswordController;
 use App\Http\Controllers\Api\RegisterController;
 use App\Http\Controllers\UserProgressController;
 use App\Http\Controllers\Api\LoginLogoutController;
+use App\Http\Controllers\ProfileControler;
+use App\Http\Controllers\UserProfileController as ControllersUserProfileController;
 use Laravel\Jetstream\Http\Controllers\Inertia\UserProfileController;
 
 Route::get('/user', function (Request $request) {
@@ -52,19 +54,11 @@ Route::prefix('scores')->controller(ScoreController::class)->group(function(){
     Route::post('/insert-score', 'store');
     Route::get('/get-all-scores', 'allScores');
 });
-
-//UserProgress
-Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/progress/save', [UserProgressController::class, 'saveProgress']);
-    Route::get('/progress', [UserProgressController::class, 'getProgress']);
-});
-
-//answered questions
-Route::prefix('answered-questions')->controller(UserProgressController::class)->group(function ()
-{
-    Route::post('/insert-answered-question', 'store');
-    Route::get('/get-answered-questions', 'getAnsweredQuestions');
-    });
-
+    //completed levels
     Route::get('/is-level-completed', [LevelController::class, 'markLevelCompleted']);
     Route::get('/get-completed-levels', [LevelController::class, 'getCompletedLevels']);
+
+
+    //user's profile
+    Route::post('/user-profile', [ProfileControler::class, 'updateUserProfile']);
+    Route::get('/get-user-profile', [ProfileControler::class, 'getUserProfile']);
