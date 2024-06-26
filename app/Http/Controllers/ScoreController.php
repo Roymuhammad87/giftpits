@@ -28,6 +28,8 @@ class ScoreController extends Controller{
          $scores = Score::orderBy('score', 'desc')->paginate(10);
          //get every user with its score
          if(count($scores) > 0) {
+            /*
+
              // if($scores->total() > $scores->perPage()){
              //     $userScores = [];
              //     foreach($scores as $score) {
@@ -46,6 +48,7 @@ class ScoreController extends Controller{
              
              //  return ApiResponse::apiResponse(200, "All scores retrieved successfully", $data);
              // } else {
+             */
                  $userScores = [];
                  foreach($scores as $score) {
                      if($score->score >= 50){

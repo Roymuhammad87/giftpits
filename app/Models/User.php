@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\Score;
+use Illuminate\Support\Carbon;
 use Laravel\Sanctum\HasApiTokens;
 use Laravel\Jetstream\HasProfilePhoto;
 use Illuminate\Notifications\Notifiable;
@@ -60,4 +61,16 @@ class User extends Authenticatable
     public function score() {
         return $this->hasOne(Score::class);
     }
+
+    //reward user every 24 hours
+
+    public function canClaimDailyReward() {
+   
+        if (!$this->last_reward_claimed_at) {
+            return true; // User has never claimed a reward}
+        $lastClaimed = Carbon::parse($this->last_reward_claimed_at);
+        
+        return $lastClaimed->diffInHours(Carbon::now()) >= 24; // Compare with server time
+    }
+  }
 }

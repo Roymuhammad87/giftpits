@@ -4,15 +4,16 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LevelController;
 use App\Http\Controllers\ScoreController;
+use App\Http\Controllers\ProfileControler;
+use App\Http\Controllers\RewardController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\Api\PasswordController;
 use App\Http\Controllers\Api\RegisterController;
 use App\Http\Controllers\UserProgressController;
 use App\Http\Controllers\Api\LoginLogoutController;
-use App\Http\Controllers\ProfileControler;
-use App\Http\Controllers\UserProfileController as ControllersUserProfileController;
 use Laravel\Jetstream\Http\Controllers\Inertia\UserProfileController;
+use App\Http\Controllers\UserProfileController as ControllersUserProfileController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -63,3 +64,6 @@ Route::prefix('scores')->controller(ScoreController::class)->group(function(){
     //user's profile
     Route::post('/user-profile', [ProfileControler::class, 'updateUserProfile']);
     Route::get('/get-user-profile', [ProfileControler::class, 'getUserProfile']);
+
+    //reward
+    Route::put('/claim-daily-reward', [RewardController::class, 'claimDailyReward']);
