@@ -36,7 +36,7 @@ class LoginLogoutController extends Controller{
             ];
             return ApiResponse::apiResponse(200, 'Logged in suuccessfully', $data);
         } else {
-            return ApiResponse::apiResponse(401, 'Invalid credentials',['error'=>'Invalid credentials']);
+            return ApiResponse::apiResponse(200, 'Invalid credentials',null);
         }
     }
 

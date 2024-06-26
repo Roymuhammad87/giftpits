@@ -31,7 +31,7 @@ class RewardController extends Controller {
             $user->save();
             return ApiResponse::apiResponse(200, "Daily reward claimed!", $score);
         } else {
-            return ApiResponse::apiResponse(200, "Daily reward already claimed.");
+            return ApiResponse::apiResponse(200, "Daily reward already claimed.", null);
         }
     }
 
