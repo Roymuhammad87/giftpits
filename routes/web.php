@@ -5,7 +5,7 @@ use App\Http\Controllers\Api\PasswordController;
 use App\Http\Controllers\Api\LoginLogoutController;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
 Route::middleware([
