@@ -10,10 +10,9 @@ use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\Api\PasswordController;
 use App\Http\Controllers\Api\RegisterController;
-use App\Http\Controllers\UserProgressController;
 use App\Http\Controllers\Api\LoginLogoutController;
-use Laravel\Jetstream\Http\Controllers\Inertia\UserProfileController;
-use App\Http\Controllers\UserProfileController as ControllersUserProfileController;
+
+
 
 Route::get('/user', function (Request $request) {
     return $request->user();

@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use ApiResponse;
 use App\Models\Score;
-use Illuminate\Http\Request;
 use App\Http\Requests\UpdateScoreRequest;
 
 class ScoreController extends Controller{

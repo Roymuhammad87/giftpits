@@ -4,11 +4,8 @@ namespace App\Http\Controllers;
 
 use ApiResponse;
 use App\Models\Level;
-use App\Models\Score;
-use App\Models\Question;
 use App\Models\UserProgress;
 use Illuminate\Http\Request;
-use App\Models\AnsweredQuestion;
 use App\Http\Requests\LevelRequest;
 
 class LevelController extends Controller{
