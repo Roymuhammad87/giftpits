@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\PasswordController;
 use App\Http\Controllers\Api\LoginLogoutController;
 use App\Http\Controllers\LevelController;
+use App\Http\Controllers\QuestionController;
 
 Route::get('/', function () {
     return view('auth.login');
@@ -32,3 +33,8 @@ Route::get('verify-email', [LoginLogoutController::class, 'emailVerification']);
 //levels
 Route::get('/create-level', [LevelController::class, 'create'])->name('create.level');
 Route::post('/insert-new-level', [LevelController::class, 'store'])->name('store.level');
+
+
+//questions
+Route::get('/create-question', [QuestionController::class, 'create'])->name('create.question');
+Route::post('/insert-new-question', [QuestionController::class, 'store'])->name('store.question');

@@ -35,7 +35,13 @@ class QuestionController extends Controller {
        } else {
           return ApiResponse::apiResponse(404, "No questions found");
           }
-    }     
+    }
+    
+    public function create()
+    {
+      return view('questions.create');
+      
+    }
 
  //store new question
  public function store(QuestionRequest $request) {
@@ -52,7 +58,8 @@ class QuestionController extends Controller {
       'level_id'=>$id,
    ]);
    if($question) {
-      return ApiResponse::apiResponse(201,  "Question created successfully", $question);
+      return redirect()->back()->with('status', 'Question created successfully');
+      // return ApiResponse::apiResponse(201,  "Question created successfully", $question);
    } else {
       return ApiResponse::apiResponse(401, "Failed to create question");
    }

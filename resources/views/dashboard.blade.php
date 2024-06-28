@@ -22,7 +22,7 @@
                     <a href="{{route('create.level')}}" class="btn btn-primary">Create Level</a>
                 </div>
                 <div class="col-md-6">
-                   <a href="" class="btn btn-primary">Craete Question</a>
+                   <a href="{{route('create.question')}}" class="btn btn-primary">Craete Question</a>
                 </div>
             </div>
           </div>
