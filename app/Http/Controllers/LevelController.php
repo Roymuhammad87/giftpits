@@ -22,6 +22,11 @@ class LevelController extends Controller{
     }
    }
 
+   public function create()
+   {
+    return view('levels.create');
+   }
+
  //insert new level
   public function store(LevelRequest $request) {
 
@@ -41,7 +46,8 @@ class LevelController extends Controller{
     ]);
 
     if($level) {
-        return ApiResponse::apiResponse(201, "Level created successfully", $level);
+        return redirect()->back()->with('status', 'Level created successfully');
+        // return ApiResponse::apiResponse(201, "Level created successfully", $level);
     } else {
         return ApiResponse::apiResponse(400, "Failed to create level");
     }

@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\PasswordController;
 use App\Http\Controllers\Api\LoginLogoutController;
+use App\Http\Controllers\LevelController;
 
 Route::get('/', function () {
     return view('auth.login');
@@ -26,3 +27,8 @@ Route::post('/reset-password/{userId}', [PasswordController::class, 'resetPasswo
 //Verfiy Email
 
 Route::get('verify-email', [LoginLogoutController::class, 'emailVerification']);
+
+
+//levels
+Route::get('/create-level', [LevelController::class, 'create'])->name('create.level');
+Route::post('/insert-new-level', [LevelController::class, 'store'])->name('store.level');
