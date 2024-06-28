@@ -65,12 +65,12 @@ class User extends Authenticatable
     //reward user every 24 hours
 
     public function canClaimDailyReward() {
-   
-        if (!$this->last_reward_claimed_at) {
-            return true; // User has never claimed a reward}
         $lastClaimed = Carbon::parse($this->last_reward_claimed_at);
+        if ($lastClaimed->diffInHours(Carbon::now()) >= 24) {
+            return true; // User has never claimed a reward}
+        }
         
-        return $lastClaimed->diffInHours(Carbon::now()) >= 24; // Compare with server time
+        return false;
     }
   }
-}
+
