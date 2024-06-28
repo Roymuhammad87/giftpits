@@ -19,7 +19,7 @@ class RewardController extends Controller {
         ]);
 
         $user = User::where('id', $request->input('user_id'))->first();
-           if ($user &&$user->canClaimDailyReward()) {
+           if ($user && $user->canClaimDailyReward()) {
             $rewardAmount = $request->input('score'); 
             // Update the user's score
             $score = Score::where('user_id', $user->id)->first();
