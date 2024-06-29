@@ -11,8 +11,7 @@ use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\Api\PasswordController;
 use App\Http\Controllers\Api\RegisterController;
 use App\Http\Controllers\Api\LoginLogoutController;
-
-
+use App\Http\Controllers\LastQuestionController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -66,3 +65,7 @@ Route::prefix('scores')->controller(ScoreController::class)->group(function(){
 
     //reward
     Route::put('/claim-daily-reward', [RewardController::class, 'claimDailyReward']);
+
+    //last question
+    Route::post('/last-question', [LastQuestionController::class, 'store']);
+    Route::get('/get-last-question', [LastQuestionController::class, 'index']);
